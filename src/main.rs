@@ -19,8 +19,9 @@ use image::RgbImage;
 use wmi::WMIConnection;
 
 const CORRECTION_FACTOR: f32 = 1.5;
-const REFRESH_DELAY_IN_SECS: u64 = 60;
+const REFRESH_DELAY_IN_SECS: u64 = 10;
 const TOLERANCE_THRESHOLD: u8 = 10;
+const WMISETBRIGHTNESS: &str = "WmiSetBrightness";
 
 struct MFLib;
 
@@ -155,7 +156,7 @@ fn set_brightness(lvl: u8) -> Result<(), Box<dyn Error>> {
 
     wmi.exec_instance_method::<WmiMonitorBrightnessMethods, ()>(
         &monitor.__PATH,
-        "WmiSetBrightness",
+        WMISETBRIGHTNESS,
         WmiSetBrightness {
             Brightness: lvl,
             Timeout: 0,
@@ -168,18 +169,17 @@ fn main() -> Result<(), Box<dyn Error>> {
     let lib = MFLib::init()?;
     let mut last_ratio: Option<u8> = None;
     loop {
-        let ratio = lib.camera_brightness()?;
+        if let Ok(ratio) = lib.camera_brightness() {
+            let ratio = ((ratio as f32) * CORRECTION_FACTOR) as u8;
 
-        let ratio = ((ratio as f32) * CORRECTION_FACTOR) as u8;
-        println!("{}", ratio);
-        if let Some(ref mut last_ratio) = last_ratio {
-            if last_ratio.abs_diff(ratio) > TOLERANCE_THRESHOLD {
-                set_brightness(ratio)?;
-                *last_ratio = ratio;
+            if let Some(ref mut last_ratio) = last_ratio {
+                if last_ratio.abs_diff(ratio) > TOLERANCE_THRESHOLD && set_brightness(ratio).is_ok()
+                {
+                    *last_ratio = ratio;
+                }
+            } else if set_brightness(ratio).is_ok() {
+                last_ratio = Some(ratio);
             }
-        } else {
-            set_brightness(ratio)?;
-            last_ratio = Some(ratio);
         }
         sleep(Duration::from_secs(REFRESH_DELAY_IN_SECS));
     }
