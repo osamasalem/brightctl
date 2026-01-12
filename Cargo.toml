@@ -10,17 +10,10 @@ image = "0.25.9"
 log = "0.4.29"
 serde = { version = "1", features = ["derive"] }
 simplelog = "0.12.2"
+time = "0.3.44"
 wmi = "0.18.0"
 
 
 [dependencies.windows]
 version = ">=0.62"
-features = [
-    "Win32_Foundation",
-    "Win32_System_Com",
-    "Win32_Devices_Display",
-    "Win32_Media_MediaFoundation",
-    "Win32_Graphics_Gdi",
-    "Win32_System_SystemServices",
-    "Win32_System_IO",
-]
+features = ["Win32_Foundation", "Win32_Media_MediaFoundation"]
