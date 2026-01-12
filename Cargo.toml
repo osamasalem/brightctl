@@ -1,11 +1,15 @@
 [package]
 name = "brightctl"
+description = "Automated laptops panel brightness adjustment based on room ambiance for MS Windows."
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+clap = { version = "4.5.54", features = ["derive"] }
 image = "0.25.9"
+log = "0.4.29"
 serde = { version = "1", features = ["derive"] }
+simplelog = "0.12.2"
 wmi = "0.18.0"
 
 
