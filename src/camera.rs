@@ -154,6 +154,6 @@ pub fn get_camera_brightness() -> Result<u8, String> {
         .map(|&px| px as f32 / u8::MAX as f32)
         .sum::<f32>();
 
-    info!("Camera image intensities {energy} / {max}");
+    trace!("Camera image intensities {energy} / {max}");
     Ok((energy / max * 100.0/* % */) as u8)
 }

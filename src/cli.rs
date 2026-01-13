@@ -37,11 +37,20 @@ pub struct CliParams {
     pub max: u8,
 
     #[arg(
-        short,
+        short = 'l',
         long,
         value_name = "ERRORLEVEL",
         default_value = "Error",
         help = "level of file logging (0=Off.. 5=Trace)"
     )]
-    pub verbose: String,
+    pub log_level: String,
+
+    #[arg(
+        short = 'f',
+        long,
+        value_name = "FILENAME",
+        default_value = "~\\brightctrl.log",
+        help = "log output file "
+    )]
+    pub log_file: String,
 }

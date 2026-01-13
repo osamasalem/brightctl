@@ -74,9 +74,9 @@ fn main() {
         ColorChoice::Auto,
     )];
 
-    if let Ok(file) = File::open("brightctrl.log") {
+    if let Ok(file) = File::open(&cli.log_file) {
         loggers.push(WriteLogger::new(
-            LevelFilter::from_str(&cli.verbose).unwrap_or(LevelFilter::Error),
+            LevelFilter::from_str(&cli.log_level).unwrap_or(LevelFilter::Error),
             config,
             file,
         ));
